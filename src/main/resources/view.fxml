@@ -6,9 +6,44 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="gugorrex.gui.ViewModel"
-            prefHeight="400.0" prefWidth="600.0">
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.shape.Line?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="gugorrex.gui.ViewModel"
+      prefHeight="400.0" prefWidth="800.0"
+      minHeight="400" minWidth="600"
+      fx:id="mainVBox" spacing="5">
+    <Text text="Add a birthday:"/>
+    <HBox fx:id="addHBOX" alignment="CENTER" spacing="30">
+        <HBox spacing="5">
+            <Text text="name"/>
+            <TextField promptText="Max Muster"/>
+        </HBox>
+        <HBox spacing="5">
+            <Text text="day"/>
+            <TextField promptText="24" maxWidth="30"/>
+        </HBox>
+        <HBox spacing="5">
+            <Text text="month"/>
+            <TextField promptText="12" maxWidth="30"/>
+        </HBox>
+        <HBox spacing="5">
+            <Text text="year"/>
+            <TextField promptText="2000" maxWidth="60"/>
+        </HBox>
+        <Button text="add" onAction="#addBirthday"/>
+    </HBox>
+    <Line fx:id="addLine"/>
 
-</AnchorPane>
+    <ListView/> <!--> This is only a placeholder!!! <!-->
+
+    <Line fx:id="resultLine"/>
+    <Text text="Calculated data:"/>
+    <HBox alignment="CENTER_LEFT" spacing="30">
+        <HBox spacing="5">
+            <Text text="age"/>
+            <TextField editable="false" text="20" maxWidth="30"/>
+        </HBox>
+    </HBox>
+</VBox>
