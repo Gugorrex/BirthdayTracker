@@ -52,6 +52,11 @@ public class ExceptionHandler {
             logBuilder.append("\t\t").append(trace.toString()).append("\n");
         }
         logBuilder.append("\t]");
-        logger.log(level, logBuilder);
+
+        if (e.getCause() != null) {
+            logBuilder.append("\nCAUSED BY...");
+            logger.log(level, logBuilder);
+            exception(logger, level, t, e.getCause());
+        } else logger.log(level, logBuilder);
     }
 }
