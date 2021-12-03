@@ -11,11 +11,11 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="gugorrex.gui.ViewModel"
-      prefHeight="400.0" prefWidth="800.0"
-      minHeight="400" minWidth="600"
+      prefHeight="400.0" prefWidth="500.0"
+      minHeight="300" minWidth="500"
       fx:id="mainVBox" spacing="5">
     <Text text="Add a birthday:"/>
-    <HBox fx:id="addHBOX" alignment="CENTER" spacing="30">
+    <HBox fx:id="addHBOX" alignment="CENTER" spacing="10">
         <HBox spacing="5">
             <Text text="name"/>
             <TextField promptText="Max Muster"/>
@@ -36,11 +36,16 @@
     </HBox>
     <Line fx:id="addLine"/>
 
-    <ListView/> <!--> This is only a placeholder!!! <!-->
+    <TableView fx:id="bDaysView" prefHeight="1000">
+        <columns>
+            <TableColumn prefWidth="75.0" text="Name" fx:id="nameColumn" />
+            <TableColumn prefWidth="75.0" text="Birthday" fx:id="birthdayColumn"/>
+        </columns>
+    </TableView>
 
     <Line fx:id="resultLine"/>
     <Text text="Calculated data:"/>
-    <HBox alignment="CENTER_LEFT" spacing="30">
+    <HBox alignment="CENTER_LEFT" spacing="10">
         <HBox spacing="5">
             <Text text="age"/>
             <TextField editable="false" text="20" maxWidth="30"/>

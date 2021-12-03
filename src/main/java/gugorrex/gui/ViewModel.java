@@ -2,13 +2,18 @@ package gugorrex.gui;
 
 import gugorrex.app.App;
 import gugorrex.events.listeners.InitializationDoneListener;
+import gugorrex.model.Birthday;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
+
+import java.time.LocalDate;
 
 public class ViewModel implements InitializationDoneListener {
 
@@ -21,12 +26,24 @@ public class ViewModel implements InitializationDoneListener {
     @FXML public Line addLine;
     @FXML public Line resultLine;
     @FXML public VBox mainVBox;
-    @FXML public ListView bDaysListView;
+
+    @FXML public TableView<Birthday> bDaysView;
+    @FXML public TableColumn<Birthday, String> nameColumn;
+    @FXML public TableColumn<Birthday, String> birthdayColumn;
 
     @FXML
     private void initialize() {
         app = App.getInstance();
         app.addListener(this);
+
+        nameColumn.setCellValueFactory(cellData -> cellData.getValue().name());
+        birthdayColumn.setCellValueFactory(cellData -> cellData.getValue().dateToString());
+
+        nameColumn.prefWidthProperty().bind(bDaysView.widthProperty().multiply(0.498));
+        birthdayColumn.prefWidthProperty().bind(bDaysView.widthProperty().multiply(0.498));
+
+        // test data
+        Platform.runLater(() -> bDaysView.getItems().add(new Birthday(new SimpleStringProperty("Max"), LocalDate.now() )));
     }
 
     @FXML
