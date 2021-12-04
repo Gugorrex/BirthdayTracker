@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
@@ -30,6 +31,10 @@ public class ViewModel implements InitializationDoneListener {
     @FXML public TableView<Birthday> bDaysView;
     @FXML public TableColumn<Birthday, String> nameColumn;
     @FXML public TableColumn<Birthday, String> birthdayColumn;
+
+    @FXML public TextField selectedName;
+    @FXML public TextField selectedBD;
+    @FXML public TextField selectedAge;
 
     @FXML
     private void initialize() {
@@ -62,9 +67,17 @@ public class ViewModel implements InitializationDoneListener {
                     addHBOX.setSpacing(Math.max((app.getStage().getWidth() - originalWidth) / addHBOX.getChildren().size(), originalSpacing));
                 }));
 
-        addLine.endXProperty().bind(app.getStage().widthProperty());
-        resultLine.endXProperty().bind(app.getStage().widthProperty());
+        //addLine.endXProperty().bind(app.getStage().widthProperty());
+        //resultLine.endXProperty().bind(app.getStage().widthProperty());
         app.getStage().minWidthProperty().bind(mainVBox.minWidthProperty());
         app.getStage().minHeightProperty().bind(mainVBox.minHeightProperty());
+    }
+
+    public void onRemove(ActionEvent actionEvent) {
+    }
+
+    public void onExit(ActionEvent actionEvent) {
+        Platform.exit();
+        System.exit(0);
     }
 }

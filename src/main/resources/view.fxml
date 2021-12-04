@@ -11,8 +11,8 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="gugorrex.gui.ViewModel"
-      prefHeight="400.0" prefWidth="500.0"
-      minHeight="300" minWidth="500"
+      prefHeight="400.0" prefWidth="520.0"
+      minHeight="300" minWidth="520"
       fx:id="mainVBox" spacing="5">
     <Text text="Add a birthday:"/>
     <HBox fx:id="addHBOX" alignment="CENTER" spacing="10">
@@ -34,7 +34,7 @@
         </HBox>
         <Button text="add" onAction="#addBirthday"/>
     </HBox>
-    <Line fx:id="addLine"/>
+    <!--Line fx:id="addLine"/!-->
 
     <TableView fx:id="bDaysView" prefHeight="1000">
         <columns>
@@ -43,12 +43,24 @@
         </columns>
     </TableView>
 
-    <Line fx:id="resultLine"/>
+    <!--Line fx:id="resultLine"/!-->
     <Text text="Calculated data:"/>
-    <HBox alignment="CENTER_LEFT" spacing="10">
-        <HBox spacing="5">
-            <Text text="age"/>
-            <TextField editable="false" text="20" maxWidth="30"/>
+    <AnchorPane>
+        <HBox alignment="CENTER_LEFT" spacing="10" AnchorPane.leftAnchor="5" AnchorPane.bottomAnchor="5">
+            <HBox spacing="5">
+                <Text text="name"/>
+                <TextField fx:id="selectedName" editable="false" promptText="Max Muster"/>
+            </HBox>
+            <HBox spacing="5">
+                <Text text="birthday"/>
+                <TextField fx:id="selectedBD" editable="false" promptText="24.12.2000" maxWidth="80"/>
+            </HBox>
+            <HBox spacing="5">
+                <Text text="age"/>
+                <TextField fx:id="selectedAge" editable="false" promptText="20" maxWidth="30"/>
+            </HBox>
+            <Button text="remove" onAction="#onRemove"/>
         </HBox>
-    </HBox>
+        <Button text="exit" onAction="#onExit" AnchorPane.bottomAnchor="5" AnchorPane.rightAnchor="5"/>
+    </AnchorPane>
 </VBox>
