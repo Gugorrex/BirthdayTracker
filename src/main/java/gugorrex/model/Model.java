@@ -29,7 +29,7 @@ public class Model {
         logger.info("Exiting with code " + code + " ...");
         birthdayList.save(FILENAME);
         Platform.exit();
-        System.exit(code);
         logger.info("Exit");
+        System.exit(code);
     }
 }
