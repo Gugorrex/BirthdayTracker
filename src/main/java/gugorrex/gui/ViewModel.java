@@ -2,7 +2,7 @@ package gugorrex.gui;
 
 import gugorrex.app.App;
 import gugorrex.events.listeners.InitializationDoneListener;
-import gugorrex.model.Birthday;
+import gugorrex.model.data.Birthday;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
@@ -41,14 +41,14 @@ public class ViewModel implements InitializationDoneListener {
         app = App.getInstance();
         app.addListener(this);
 
-        nameColumn.setCellValueFactory(cellData -> cellData.getValue().name());
+        nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         birthdayColumn.setCellValueFactory(cellData -> cellData.getValue().dateToString());
 
         nameColumn.prefWidthProperty().bind(bDaysView.widthProperty().multiply(0.498));
         birthdayColumn.prefWidthProperty().bind(bDaysView.widthProperty().multiply(0.498));
 
         // test data
-        Platform.runLater(() -> bDaysView.getItems().add(new Birthday(new SimpleStringProperty("Max"), LocalDate.now() )));
+        Platform.runLater(() -> bDaysView.getItems().add(new Birthday("Max Muster", LocalDate.now() )));
     }
 
     @FXML
