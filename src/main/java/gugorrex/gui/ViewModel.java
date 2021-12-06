@@ -2,11 +2,11 @@ package gugorrex.gui;
 
 import gugorrex.app.App;
 import gugorrex.events.listeners.InitializationDoneListener;
+import gugorrex.model.Model;
 import gugorrex.model.data.Birthday;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -19,6 +19,7 @@ import java.time.LocalDate;
 public class ViewModel implements InitializationDoneListener {
 
     private App app;
+    private Model model;
     private double originalWidth;
     private double originalHeight;
     private double originalSpacing;
@@ -27,6 +28,11 @@ public class ViewModel implements InitializationDoneListener {
     @FXML public Line addLine;
     @FXML public Line resultLine;
     @FXML public VBox mainVBox;
+
+    @FXML public TextField addName;
+    @FXML public TextField addDay;
+    @FXML public TextField addMonth;
+    @FXML public TextField addYear;
 
     @FXML public TableView<Birthday> bDaysView;
     @FXML public TableColumn<Birthday, String> nameColumn;
@@ -41,19 +47,56 @@ public class ViewModel implements InitializationDoneListener {
         app = App.getInstance();
         app.addListener(this);
 
+        model = Model.getInstance();
+
         nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         birthdayColumn.setCellValueFactory(cellData -> cellData.getValue().dateToString());
 
         nameColumn.prefWidthProperty().bind(bDaysView.widthProperty().multiply(0.498));
         birthdayColumn.prefWidthProperty().bind(bDaysView.widthProperty().multiply(0.498));
 
-        // test data
-        Platform.runLater(() -> bDaysView.getItems().add(new Birthday("Max Muster", LocalDate.now() )));
+        Platform.runLater(() -> {
+            for (Birthday birthday : model.getBirthdayList().getBirthdays()) {
+                bDaysView.getItems().add(birthday);
+            }
+        });
+
+        bDaysView.getSelectionModel().selectedItemProperty().addListener((observableValue, birthdayTableViewSelectionModel, t1) -> {
+            Platform.runLater(() -> {
+                Birthday birthday = bDaysView.getSelectionModel().getSelectedItem();
+                if (birthday != null) {
+                    selectedName.setText(birthday.getName());
+                    selectedBD.setText(birthday.dateToString().getValue());
+                    selectedAge.setText(Integer.toString(model.calculateYearDiff(birthday.getBirthday(), LocalDate.now())));
+                }
+            });
+        });
     }
 
     @FXML
-    public void addBirthday(ActionEvent actionEvent) {
-
+    public void addBirthday() {
+        if (!addName.getText().isBlank()) {
+            try {
+                int year = Integer.parseInt(addYear.getText());
+                int month = Integer.parseInt(addMonth.getText());
+                int day = Integer.parseInt(addDay.getText());
+                model.getBirthdayList().addBirthday(new Birthday(addName.getText(), LocalDate.of(year, month, day)));
+                model.save();
+                expensiveTableFullUpdate();
+            } catch (NumberFormatException ignored) {
+                Alert a = new Alert(Alert.AlertType.ERROR);
+                a.setTitle("ERROR: Wrong Number Format!");
+                a.setHeaderText("ERROR: Wrong Number Format!");
+                a.setContentText("day, month and year must be an integer value (0-9) and no characters (a-z,...)");
+                a.show();
+            }
+        } else {
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("ERROR: Missing Name!");
+            a.setHeaderText("ERROR: Missing Name!");
+            a.setContentText("the name must not be blank!");
+            a.show();
+        }
     }
 
     // Everything bound to stage must be initialized after initialization of app is done!
@@ -73,11 +116,28 @@ public class ViewModel implements InitializationDoneListener {
         app.getStage().minHeightProperty().bind(mainVBox.minHeightProperty());
     }
 
-    public void onRemove(ActionEvent actionEvent) {
+    public void onRemove() {
+        Birthday birthday = bDaysView.getSelectionModel().getSelectedItem();
+        bDaysView.getSelectionModel().clearSelection();
+        selectedName.clear();
+        selectedAge.clear();
+        selectedBD.clear();
+        model.getBirthdayList().removeBirthday(birthday);
+        model.save();
+        expensiveTableFullUpdate();
     }
 
-    public void onExit(ActionEvent actionEvent) {
-        Platform.exit();
-        System.exit(0);
+    public void onExit() {
+        Model.getInstance().exit(0);
+    }
+
+    // this is expensive but also a fallback if relative update (not implemented yet) fails
+    private void expensiveTableFullUpdate() {
+        Platform.runLater(() -> {
+            bDaysView.getItems().clear();
+            for (Birthday birthday : model.getBirthdayList().getBirthdays()) {
+                bDaysView.getItems().add(birthday);
+            }
+        });
     }
 }

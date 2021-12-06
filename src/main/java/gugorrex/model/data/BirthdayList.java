@@ -3,12 +3,16 @@ package gugorrex.model.data;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import gugorrex.util.ExceptionHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class BirthdayList {
+    private static final Logger logger = LogManager.getLogger(BirthdayList.class);
+
     private ArrayList<Birthday> birthdays = new ArrayList<>();
 
     public ArrayList<Birthday> getBirthdays() {
@@ -32,10 +36,13 @@ public class BirthdayList {
     }
 
     public void save(String filename) {
+        logger.info("Start saving...");
+
         String path = System.getProperty("user.dir");
         File file = new File(path + "/" + filename);
 
         if (!file.exists()) {
+            logger.warn("File does not exist! Trying to create file...");
             try {
                 File directory = new File(file.getParent());
                 if (!directory.exists()) {
@@ -48,6 +55,7 @@ public class BirthdayList {
         }
 
         try {
+            logger.info("Saving BirthdayList to " + file.getPath() + " ...");
             FileWriter fileWriter;
             fileWriter = new FileWriter(file.getAbsoluteFile(), false);
 
@@ -57,9 +65,12 @@ public class BirthdayList {
         } catch (IOException e) {
             ExceptionHandler.exception(e);
         }
+        logger.info("Saving process done");
     }
 
     public void load(String filename) {
+        logger.info("Start loading...");
+
         String path = System.getProperty("user.dir");
         File file = new File(path + "/" + filename);
 
@@ -68,6 +79,7 @@ public class BirthdayList {
         if (file.exists()) {
             InputStreamReader inputStreamReader;
             try {
+                logger.info("Loading BirthdayList from " + file.getPath() + " ...");
                 inputStreamReader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
                 JsonReader myReader = new JsonReader(inputStreamReader);
                 Gson gson = BirthdayGsonProxy.getPrettyGson();
@@ -77,6 +89,7 @@ public class BirthdayList {
                 ExceptionHandler.exception(e);
             }
         }
+        logger.info("Loading process done");
     }
 
     @Override
