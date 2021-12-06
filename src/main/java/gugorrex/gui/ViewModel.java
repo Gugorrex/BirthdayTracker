@@ -5,7 +5,6 @@ import gugorrex.events.listeners.InitializationDoneListener;
 import gugorrex.model.Model;
 import gugorrex.model.data.Birthday;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -55,8 +54,11 @@ public class ViewModel implements InitializationDoneListener {
         nameColumn.prefWidthProperty().bind(bDaysView.widthProperty().multiply(0.498));
         birthdayColumn.prefWidthProperty().bind(bDaysView.widthProperty().multiply(0.498));
 
-        // test data
-        Platform.runLater(() -> bDaysView.getItems().add(new Birthday("Max Muster", LocalDate.now() )));
+        Platform.runLater(() -> {
+            for (Birthday birthday : model.getBirthdayList().getBirthdays()) {
+                bDaysView.getItems().add(birthday);
+            }
+        });
     }
 
     @FXML
@@ -65,6 +67,7 @@ public class ViewModel implements InitializationDoneListener {
                 LocalDate.of(Integer.parseInt(addYear.getText()), Integer.parseInt(addMonth.getText()),
                         Integer.parseInt(addDay.getText()))));
         model.save();
+        expensiveTableFullUpdate();
     }
 
     // Everything bound to stage must be initialized after initialization of app is done!
@@ -91,9 +94,20 @@ public class ViewModel implements InitializationDoneListener {
                 LocalDate.of(Integer.parseInt(addYear.getText()), Integer.parseInt(addMonth.getText()),
                         Integer.parseInt(addDay.getText()))));
         model.save();
+        expensiveTableFullUpdate();
     }
 
     public void onExit() {
         Model.getInstance().exit(0);
+    }
+
+    // this is expensive but also a fallback if relative update (not implemented yet) fails
+    private void expensiveTableFullUpdate() {
+        Platform.runLater(() -> {
+            bDaysView.getItems().clear();
+            for (Birthday birthday : model.getBirthdayList().getBirthdays()) {
+                bDaysView.getItems().add(birthday);
+            }
+        });
     }
 }
