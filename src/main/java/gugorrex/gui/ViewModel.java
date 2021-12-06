@@ -2,9 +2,9 @@ package gugorrex.gui;
 
 import gugorrex.app.App;
 import gugorrex.events.listeners.InitializationDoneListener;
+import gugorrex.model.Model;
 import gugorrex.model.data.Birthday;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
@@ -76,8 +76,7 @@ public class ViewModel implements InitializationDoneListener {
     public void onRemove(ActionEvent actionEvent) {
     }
 
-    public void onExit(ActionEvent actionEvent) {
-        Platform.exit();
-        System.exit(0);
+    public void onExit() {
+        Model.getInstance().exit(0);
     }
 }

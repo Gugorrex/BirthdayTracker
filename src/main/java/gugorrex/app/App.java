@@ -1,6 +1,7 @@
 package gugorrex.app;
 
 import gugorrex.events.listeners.InitializationDoneListener;
+import gugorrex.model.Model;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -46,8 +47,7 @@ public class App extends Application {
         stage.setResizable(true);
 
         stage.setOnCloseRequest(t -> {
-            Platform.exit();
-            System.exit(0);
+            Model.getInstance().exit(0);
         });
 
         stage.show();
