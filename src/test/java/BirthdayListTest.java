@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.Scanner;
 
 public class BirthdayListTest {
 
@@ -42,9 +43,30 @@ public class BirthdayListTest {
         BirthdayList newList = new BirthdayList();
         newList.load("BirthdayListTest.json");
 
-        Assertions.assertEquals(birthdayList.toJson(), newList.toJson());
-        Assertions.assertEquals(birthdayList.toPrettyJson(), newList.toPrettyJson());
+        testHelpMethodRemoveLineBreak();
+        Assertions.assertEquals(removeNTS(birthdayList.toJson()), removeNTS(newList.toJson()));
+        Assertions.assertEquals(removeNTS(birthdayList.toPrettyJson()), removeNTS(newList.toPrettyJson()));
+        Assertions.assertEquals(removeNTS(birthdayList.toPrettyJson()), removeNTS(newList.toJson()));
+        Assertions.assertEquals(removeNTS(birthdayList.toJson()), removeNTS(newList.toPrettyJson()));
         Assertions.assertEquals(birthdayList, newList);
+    }
+
+    private static String removeNTS(String s) {
+        String t = s.trim();
+        Scanner scanner = new Scanner(t);
+        scanner.useDelimiter("\\n|\\t|\\s");
+        String r = "";
+        while (scanner.hasNext()) {
+            r += scanner.next();
+        }
+        return r.trim();
+    }
+
+    @Test
+    public void testHelpMethodRemoveLineBreak() {
+        String s = "Hallo\t \n We\slt!\n";
+        String r = "HalloWelt!";
+        Assertions.assertEquals(r, removeNTS(s));
     }
 
 }
