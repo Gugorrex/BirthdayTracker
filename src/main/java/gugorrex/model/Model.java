@@ -1,9 +1,12 @@
 package gugorrex.model;
 
 import gugorrex.model.data.BirthdayList;
+import gugorrex.util.ExceptionHandler;
 import javafx.application.Platform;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.time.LocalDate;
 
 public class Model {
 
@@ -44,5 +47,20 @@ public class Model {
 
     public void load() {
         birthdayList.load(FILENAME);
+    }
+
+    public int calculateYearDiff(LocalDate before, LocalDate after) {
+        if (before.isAfter(after)) {
+            ExceptionHandler.exception(new Exception("calculateYearDiff(): the date 'before' is after 'after'" +
+                    ", but it should be the other way around!"));
+        }
+
+        int diff = after.getYear() - before.getYear();
+
+        if (before.getDayOfYear() > after.getDayOfYear()) {
+            diff--;
+        }
+
+        return diff;
     }
 }

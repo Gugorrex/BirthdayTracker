@@ -59,6 +59,15 @@ public class ViewModel implements InitializationDoneListener {
                 bDaysView.getItems().add(birthday);
             }
         });
+
+        bDaysView.getSelectionModel().selectedItemProperty().addListener((observableValue, birthdayTableViewSelectionModel, t1) -> {
+            Platform.runLater(() -> {
+                Birthday birthday = bDaysView.getSelectionModel().getSelectedItem();
+                selectedName.setText(birthday.getName());
+                selectedBD.setText(birthday.dateToString().getValue());
+                selectedAge.setText(Integer.toString(model.calculateYearDiff(birthday.getBirthday(), LocalDate.now())));
+            });
+        });
     }
 
     @FXML
