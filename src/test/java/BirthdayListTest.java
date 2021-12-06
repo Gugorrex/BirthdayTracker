@@ -43,7 +43,7 @@ public class BirthdayListTest {
         BirthdayList newList = new BirthdayList();
         newList.load("BirthdayListTest.json");
 
-        testHelpMethodRemoveLineBreak();
+        testHelpMethodRemoveNTS();
         Assertions.assertEquals(removeNTS(birthdayList.toJson()), removeNTS(newList.toJson()));
         Assertions.assertEquals(removeNTS(birthdayList.toPrettyJson()), removeNTS(newList.toPrettyJson()));
         Assertions.assertEquals(removeNTS(birthdayList.toPrettyJson()), removeNTS(newList.toJson()));
@@ -63,7 +63,7 @@ public class BirthdayListTest {
     }
 
     @Test
-    public void testHelpMethodRemoveLineBreak() {
+    public void testHelpMethodRemoveNTS() {
         String s = "Hallo\t \n We\slt!\n";
         String r = "HalloWelt!";
         Assertions.assertEquals(r, removeNTS(s));
