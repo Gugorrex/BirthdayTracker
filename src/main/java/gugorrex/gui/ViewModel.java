@@ -6,6 +6,7 @@ import gugorrex.model.Model;
 import gugorrex.model.data.Birthday;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -63,20 +64,39 @@ public class ViewModel implements InitializationDoneListener {
         bDaysView.getSelectionModel().selectedItemProperty().addListener((observableValue, birthdayTableViewSelectionModel, t1) -> {
             Platform.runLater(() -> {
                 Birthday birthday = bDaysView.getSelectionModel().getSelectedItem();
-                selectedName.setText(birthday.getName());
-                selectedBD.setText(birthday.dateToString().getValue());
-                selectedAge.setText(Integer.toString(model.calculateYearDiff(birthday.getBirthday(), LocalDate.now())));
+                if (birthday != null) {
+                    selectedName.setText(birthday.getName());
+                    selectedBD.setText(birthday.dateToString().getValue());
+                    selectedAge.setText(Integer.toString(model.calculateYearDiff(birthday.getBirthday(), LocalDate.now())));
+                }
             });
         });
     }
 
     @FXML
     public void addBirthday() {
-        model.getBirthdayList().addBirthday(new Birthday(addName.getText(),
-                LocalDate.of(Integer.parseInt(addYear.getText()), Integer.parseInt(addMonth.getText()),
-                        Integer.parseInt(addDay.getText()))));
-        model.save();
-        expensiveTableFullUpdate();
+        if (!addName.getText().isBlank()) {
+            try {
+                int year = Integer.parseInt(addYear.getText());
+                int month = Integer.parseInt(addMonth.getText());
+                int day = Integer.parseInt(addDay.getText());
+                model.getBirthdayList().addBirthday(new Birthday(addName.getText(), LocalDate.of(year, month, day)));
+                model.save();
+                expensiveTableFullUpdate();
+            } catch (NumberFormatException ignored) {
+                Alert a = new Alert(Alert.AlertType.ERROR);
+                a.setTitle("ERROR: Wrong Number Format!");
+                a.setHeaderText("ERROR: Wrong Number Format!");
+                a.setContentText("day, month and year must be an integer value (0-9) and no characters (a-z,...)");
+                a.show();
+            }
+        } else {
+            Alert a = new Alert(Alert.AlertType.ERROR);
+            a.setTitle("ERROR: Missing Name!");
+            a.setHeaderText("ERROR: Missing Name!");
+            a.setContentText("the name must not be blank!");
+            a.show();
+        }
     }
 
     // Everything bound to stage must be initialized after initialization of app is done!
@@ -97,11 +117,12 @@ public class ViewModel implements InitializationDoneListener {
     }
 
     public void onRemove() {
-        // ONLY TEMPORARILY FOR TESTING
-        // TODO use selected Items instead of user string input
-        model.getBirthdayList().removeBirthday(new Birthday(addName.getText(),
-                LocalDate.of(Integer.parseInt(addYear.getText()), Integer.parseInt(addMonth.getText()),
-                        Integer.parseInt(addDay.getText()))));
+        Birthday birthday = bDaysView.getSelectionModel().getSelectedItem();
+        bDaysView.getSelectionModel().clearSelection();
+        selectedName.clear();
+        selectedAge.clear();
+        selectedBD.clear();
+        model.getBirthdayList().removeBirthday(birthday);
         model.save();
         expensiveTableFullUpdate();
     }
