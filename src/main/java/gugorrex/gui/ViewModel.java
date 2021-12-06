@@ -19,6 +19,7 @@ import java.time.LocalDate;
 public class ViewModel implements InitializationDoneListener {
 
     private App app;
+    private Model model;
     private double originalWidth;
     private double originalHeight;
     private double originalSpacing;
@@ -27,6 +28,11 @@ public class ViewModel implements InitializationDoneListener {
     @FXML public Line addLine;
     @FXML public Line resultLine;
     @FXML public VBox mainVBox;
+
+    @FXML public TextField addName;
+    @FXML public TextField addDay;
+    @FXML public TextField addMonth;
+    @FXML public TextField addYear;
 
     @FXML public TableView<Birthday> bDaysView;
     @FXML public TableColumn<Birthday, String> nameColumn;
@@ -41,6 +47,8 @@ public class ViewModel implements InitializationDoneListener {
         app = App.getInstance();
         app.addListener(this);
 
+        model = Model.getInstance();
+
         nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
         birthdayColumn.setCellValueFactory(cellData -> cellData.getValue().dateToString());
 
@@ -52,8 +60,11 @@ public class ViewModel implements InitializationDoneListener {
     }
 
     @FXML
-    public void addBirthday(ActionEvent actionEvent) {
-
+    public void addBirthday() {
+        model.getBirthdayList().addBirthday(new Birthday(addName.getText(),
+                LocalDate.of(Integer.parseInt(addYear.getText()), Integer.parseInt(addMonth.getText()),
+                        Integer.parseInt(addDay.getText()))));
+        model.save();
     }
 
     // Everything bound to stage must be initialized after initialization of app is done!
@@ -73,7 +84,13 @@ public class ViewModel implements InitializationDoneListener {
         app.getStage().minHeightProperty().bind(mainVBox.minHeightProperty());
     }
 
-    public void onRemove(ActionEvent actionEvent) {
+    public void onRemove() {
+        // ONLY TEMPORARILY FOR TESTING
+        // TODO use selected Items instead of user string input
+        model.getBirthdayList().removeBirthday(new Birthday(addName.getText(),
+                LocalDate.of(Integer.parseInt(addYear.getText()), Integer.parseInt(addMonth.getText()),
+                        Integer.parseInt(addDay.getText()))));
+        model.save();
     }
 
     public void onExit() {

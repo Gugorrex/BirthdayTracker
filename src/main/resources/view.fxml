@@ -18,19 +18,19 @@
     <HBox fx:id="addHBOX" alignment="CENTER" spacing="10">
         <HBox spacing="5">
             <Text text="name"/>
-            <TextField promptText="Max Muster"/>
+            <TextField fx:id="addName" promptText="Max Muster"/>
         </HBox>
         <HBox spacing="5">
             <Text text="day"/>
-            <TextField promptText="24" maxWidth="30"/>
+            <TextField fx:id="addDay" promptText="24" maxWidth="30"/>
         </HBox>
         <HBox spacing="5">
             <Text text="month"/>
-            <TextField promptText="12" maxWidth="30"/>
+            <TextField fx:id="addMonth" promptText="12" maxWidth="30"/>
         </HBox>
         <HBox spacing="5">
             <Text text="year"/>
-            <TextField promptText="2000" maxWidth="60"/>
+            <TextField fx:id="addYear" promptText="2000" maxWidth="60"/>
         </HBox>
         <Button text="add" onAction="#addBirthday"/>
     </HBox>

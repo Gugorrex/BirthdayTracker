@@ -7,7 +7,8 @@ import org.apache.logging.log4j.Logger;
 
 public class Model {
 
-    private static final String FILENAME = "birthdays.json";
+    public static final String FILENAME = "birthdays.json";
+
     private static final Logger logger = LogManager.getLogger(Model.class);
 
     private static Model instance;
@@ -31,5 +32,17 @@ public class Model {
         Platform.exit();
         logger.info("Exit");
         System.exit(code);
+    }
+
+    public BirthdayList getBirthdayList() {
+        return birthdayList;
+    }
+
+    public void save() {
+        birthdayList.save(FILENAME);
+    }
+
+    public void load() {
+        birthdayList.load(FILENAME);
     }
 }
